@@ -19,5 +19,6 @@ def get_iso_sha1(filename):
         return hashlib.sha1(f.read()).hexdigest()
 
 if __name__ == "__main__":
-    filepath = r'F:\ISO\cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso'
-    print(get_iso_sha1(filepath))
+    #filepath = r'F:\ISO\cn_windows_10_business_editions_version_1909_x64_dvd_0ca83907.iso'
+    #print(get_iso_sha1(filepath))
+    print(hashlib.md5('hello').hexdigest())
