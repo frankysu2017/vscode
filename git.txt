@@ -1,0 +1,2 @@
+problem1: refusing to merge unrelated histories
+solution1: git pull origin master --allow-unrelated-histories
