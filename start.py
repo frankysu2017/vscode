@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # coding=utf-8
 import hashlib
+import os
 
 
 def twoSum(nums, target):
@@ -21,4 +22,5 @@ def get_iso_sha1(filename):
 
 if __name__ == "__main__":
     # print(get_iso_sha1(filepath))
-    print(hashlib.md5('Hello, world1!'.encode('utf8')).hexdigest())
+    # print(hashlib.md5('Hello, world1!'.encode('utf8')).hexdigest())
+    print(os.environ["USERPROFILE"])
