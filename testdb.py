@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
+import sys
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -40,13 +42,4 @@ class Tags(db.Model):
 
 
 if __name__ == "__main__":
-    p1 = Person('Guo')
-    p2 = Person('Tao')
-    t1 = Tags('AA')
-    t2 = Tags('AAA')
-    p1.tags.append(t1)
-    p1.tags.append(t2)
-    p2.tags.append(t2)
-    print(t2.persons)
-    p1.tags = []
-    print(t2.persons)
+    print(sys.path)
