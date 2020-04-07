@@ -98,9 +98,9 @@ def insert():
                        event=request.form['event'],
                        stain=request.form['stain'])
 
-        if request.form['tags']:
-            for item in request.form['party'].split('-'):
-                tag = PartyInfo(item)
+        #if request.form['tags']:
+        #    for item in request.form['party'].split('-'):
+        #        tag = PartyInfo(item)
 
         if request.form['picture']:
             for item in request.form['picture'].split('\n'):

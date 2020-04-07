@@ -1,5 +1,9 @@
 {
     "python.envFile": "${workspaceFolder}/.vscode/.env",
     "python.pythonPath": "venv\\Scripts\\python.exe",
-    "python.formatting.provider": "yapf"
+    "python.formatting.provider": "yapf",
+    "terminal.integrated.env.windows": 
+    {
+        "PYTHONPATH": "${workspaceRoot};C:\\Users\\junie\\PycharmProjects\\testVSC\\hkprofile"
+    }
 }

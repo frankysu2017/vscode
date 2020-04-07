@@ -42,4 +42,4 @@ class Tags(db.Model):
 
 
 if __name__ == "__main__":
-    print(os.path)
+    print('sqlite:///' + os.path.join(os.path.pardir, 'database.db'))
