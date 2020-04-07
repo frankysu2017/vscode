@@ -1,2 +1,5 @@
 /venv/
 /database.db
+/hkprofile/_pycache_/
+/hkprofile/controllers/_pycache_/
+hkprofile/__pycache__/__init__.cpython-37.pyc
