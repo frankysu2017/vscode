@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding=utf-8
 
-import sys
+import os
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -42,4 +42,4 @@ class Tags(db.Model):
 
 
 if __name__ == "__main__":
-    print(sys.path)
+    print(os.path)

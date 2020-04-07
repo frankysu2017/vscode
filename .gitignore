@@ -3,3 +3,8 @@
 /hkprofile/_pycache_/
 /hkprofile/controllers/_pycache_/
 hkprofile/__pycache__/__init__.cpython-38.pyc
+hkprofile/__pycache__/config.cpython-38.pyc
+hkprofile/__pycache__/forms.cpython-38.pyc
+hkprofile/__pycache__/models.cpython-38.pyc
+hkprofile/controllers/__pycache__/__init__.cpython-38.pyc
+hkprofile/controllers/__pycache__/profiles.cpython-38.pyc
