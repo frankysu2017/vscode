@@ -9,7 +9,7 @@
 	{% for party in party_list %}
 	<div class="col-lg-3">
 		<label class="checkbox-inline">
-			<input type="checkbox" name="partytags" {{ party['flag'] }} value="{{ party['party_tag'] }}"/>{{ party['party_tag'] }}
+			<input type="checkbox" name="partytags" {{ party['flag'] }} value="{{ party['party_name'] }}"/>{{ party['party_name'] }}
 		</label>
 	</div>
 	{% endfor %}
@@ -66,7 +66,7 @@
 					<td>{{ p.en_name }}</td>
 					<td>{{ p.gender }}</td>
 					<td>{{ p.occupation }}</td>
-					<td>{{ p.party_tag }}</td>
+					<td>{{ p.partytag }}</td>
 				</tr>
 				{% endfor %}
 			</tbody>

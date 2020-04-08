@@ -159,5 +159,5 @@ class PartyInfo(db.Model):
         self.party_name = party_name
 
     def __repr__(self):
-        return "<party '{}'>".format(self.party_name)
+        return "{}".format(self.party_name)
 

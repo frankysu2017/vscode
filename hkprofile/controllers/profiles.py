@@ -98,9 +98,15 @@ def insert():
                        event=request.form['event'],
                        stain=request.form['stain'])
 
-        #if request.form['tags']:
-        #    for item in request.form['party'].split('-'):
-        #        tag = PartyInfo(item)
+        if request.form['party']:
+            tag_list = [x.party_name for x in PartyInfo.query.distinct(PartyInfo.party_name).all()]
+            for item in request.form['party'].split('-'):
+                if item in tag_list:
+                    print('旧标签!!!!!!!!!!!!!!!!!!!!!')
+                else:
+                    tag = PartyInfo(item)
+                    db.session.add(tag)
+                    p.partytag.append(tag)
 
         if request.form['picture']:
             for item in request.form['picture'].split('\n'):
@@ -115,11 +121,12 @@ def insert():
 
 @query.route('/party')
 def party_list():
-    PersonInfo.query.filter(PersonInfo.party_tag is None).update(
-        {'party_tag': ''})
-    p_list = db.session.query(PersonInfo.party_tag,
+    PartyInfo.query.filter(PartyInfo.party_name == None).update(
+        {'party_name': ''})
+    db.session.commit()
+    p_list = db.session.query(PartyInfo.party_name,
                               db.func.count('*').label('c')).group_by(
-                                  PersonInfo.party_tag).all()
+                                  PartyInfo.party_name).all()
     return render_template('party.html', party_list=p_list)
 
 
@@ -159,18 +166,18 @@ def occupation_member(occupationname):
 
 @query.route('/tags', methods=['POST', 'GET'])
 def tags():
-    PersonInfo.query.filter(PersonInfo.party_tag is None).update(
-        {'party_tag': ''})
+    PartyInfo.query.filter(PartyInfo.party_name == None).update(
+        {'party_name': ''})
     p_list = []
-    for item in db.session.query(PersonInfo.party_tag).distinct().all():
-        if item.party_tag:
-            p_list.append({'party_tag': item.party_tag})
+    for item in db.session.query(PartyInfo.party_name).distinct().all():
+        if item.party_name:
+            p_list.append({'party_name': item.party_name})
         else:
-            p_list.append({'party_tag': "党派未录入"})
+            p_list.append({'party_name': "党派未录入"})
     if request.method == 'POST':
         checked_list = [x.strip() for x in request.form.getlist('partytags')]
         for item in p_list:
-            if item['party_tag'] in checked_list:
+            if item['party_name'] in checked_list:
                 item['flag'] = "checked"
             else:
                 item['flag'] = ""
@@ -178,13 +185,13 @@ def tags():
         for tag in checked_list:
             tag = tag
             if tag == '党派未录入':
-                persons.extend(
-                    PersonInfo.query.filter(
-                        or_(PersonInfo.party_tag is None,
-                            PersonInfo.party_tag == '')).all())
+                for tag in PartyInfo.query.filter(
+                        or_(PartyInfo.party_name == None,
+                            PartyInfo.party_name == '')).all():
+                    persons.extend(tag.person)
             else:
-                persons.extend(
-                    PersonInfo.query.filter(PersonInfo.party_tag == tag).all())
+                for tag in PartyInfo.query.filter(PartyInfo.party_name == tag).all():
+                    persons.extend(tag.person)
         return render_template('tags.html', party_list=p_list, data=persons)
     else:
         return render_template('tags.html', party_list=p_list)

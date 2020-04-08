@@ -171,10 +171,14 @@
 						<!-- /.col-md-6 -->
 						<div class="col-md-6">
 							<div class="row">
-								{% if p.party_tag %}
+								{% if p.partytag %}
 								<div class="col-xs-5"><label>党派:</label></div>
 								<!-- /.col-xs-5 -->
-								<div class="col-xs-7">{{ p.party_tag }}</div>
+								<div class="col-xs-7">
+									{% for t in p.partytag %}
+									{{t.party_name}};
+									{% endfor %}
+								</div>
 								<!-- /.col-xs-7 -->
 								{% endif %}
 							</div>
