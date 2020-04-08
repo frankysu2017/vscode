@@ -1,2 +1,8 @@
 problem1: refusing to merge unrelated histories
 solution1: git pull origin master --allow-unrelated-histories
+
+add arguments into lauch.json
+add "args":["server"]
+
+set PYTHONPATH into %{workspaceRoot}/.vscode/setting.json
+add "terminal.integrated.env.windows": {"PYTHONPATH": "${workspaceRoot};${workspaceRoot}\\hkprofile"}

@@ -1,4 +1,7 @@
+$ cat .gitignore
 /venv/
 /database.db
-/hkprofile/_pycache_/
-/hkprofile/controllers/_pycache_/
+/__pycache__
+/hkprofile/__pycache__/
+/hkprofile/controllers/__pycache__/
+
