@@ -5,5 +5,13 @@
     "terminal.integrated.env.windows": 
     {
         "PYTHONPATH": "${workspaceRoot};${workspaceRoot}\\hkprofile"
-    }
+    },
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}\\database.db",
+            "dialect": "SQLite",
+            "name": "c1"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }
