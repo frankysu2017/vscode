@@ -4,6 +4,6 @@
     "python.formatting.provider": "yapf",
     "terminal.integrated.env.windows": 
     {
-        "PYTHONPATH": "${workspaceRoot};C:\\Users\\junie\\PycharmProjects\\testVSC\\hkprofile"
+        "PYTHONPATH": "${workspaceRoot};${workspaceRoot}\\hkprofile"
     }
 }
