@@ -102,11 +102,11 @@ def insert():
             tag_list = [x.party_name for x in PartyInfo.query.distinct(PartyInfo.party_name).all()]
             for item in request.form['party'].split('-'):
                 if item in tag_list:
-                    print('旧标签!!!!!!!!!!!!!!!!!!!!!')
+                    tag = PartyInfo.query.filter_by(party_name=item).first()
                 else:
                     tag = PartyInfo(item)
-                    db.session.add(tag)
-                    p.partytag.append(tag)
+                    # db.session.add(tag)
+                p.partytag.append(tag)
 
         if request.form['picture']:
             for item in request.form['picture'].split('\n'):
