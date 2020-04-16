@@ -108,7 +108,6 @@ def insert():
                     tag = PartyInfo.query.filter_by(party_name=item).first()
                 else:
                     tag = PartyInfo(item)
-                    # db.session.add(tag)
                 p.partytag.append(tag)
 
         if request.form['picture']:
@@ -244,7 +243,6 @@ def edit(person_id=0):
         p.home_address = request.form['home_address']
         p.post_address = request.form['post_address']
         p.company_address = request.form['company_address']
-        p.party_tag = request.form['party']
         p.occupation = request.form['occupation']
         p.private_phone = request.form['private_phone']
         p.office_phone = request.form['company_phone']
@@ -263,6 +261,17 @@ def edit(person_id=0):
             for item in request.form['picture'].split('\n'):
                 avt = Avatar(item)
                 p.avatar.append(avt)
+        if request.form['party']:
+            tag_list = [
+                x.party_name
+                for x in PartyInfo.query.distinct(PartyInfo.party_name).all()
+            ]
+            for item in request.form['party'].split('-'):
+                if item in tag_list:
+                    tag = PartyInfo.query.filter_by(party_name=item).first()
+                else:
+                    tag = PartyInfo(item)
+                p.partytag.append(tag)
         db.session.add(p)
         db.session.commit()
         return redirect(url_for('profile.detail', person_id=person_id))
