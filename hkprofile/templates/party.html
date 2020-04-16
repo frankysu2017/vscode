@@ -8,7 +8,7 @@
 
 <div class="col-xs-12">
 	<div class="box-content">
-		<h4 class="box-title">党派列表</h4>
+		<h4 class="box-title"><a href="/tags">党派标签筛选</a></h4>
 		<!-- /.box-title -->
 		<div class="dropdown js__drop_down">
 			<a href="#" class="dropdown-icon glyphicon glyphicon-option-vertical js__drop_down_button"></a>
@@ -47,7 +47,7 @@
 				{% for item in party_list %}
 				<tr>
 					<td>{% if item.party_name %} {{ item.party_name }} {% else %} 党派未录入 {% endif %}</td>
-					<td>{{ item.c }}</td>
+					<td>{{ item.member_count }}</td>
 					<td> </td>
 					<td> </td>
 					<td> </td>

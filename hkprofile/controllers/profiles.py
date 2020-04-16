@@ -99,7 +99,10 @@ def insert():
                        stain=request.form['stain'])
 
         if request.form['party']:
-            tag_list = [x.party_name for x in PartyInfo.query.distinct(PartyInfo.party_name).all()]
+            tag_list = [
+                x.party_name
+                for x in PartyInfo.query.distinct(PartyInfo.party_name).all()
+            ]
             for item in request.form['party'].split('-'):
                 if item in tag_list:
                     tag = PartyInfo.query.filter_by(party_name=item).first()
@@ -124,21 +127,32 @@ def party_list():
     PartyInfo.query.filter(PartyInfo.party_name == None).update(
         {'party_name': ''})
     db.session.commit()
-    p_list = db.session.query(PartyInfo.party_name,
-                              db.func.count('*').label('c')).group_by(
-                                  PartyInfo.party_name).all()
-    return render_template('party.html', party_list=p_list)
+    p_list = db.session.query(PartyInfo.party_name).distinct().all()
+    party_dicts = []
+    for item in p_list:
+        party_members = PartyInfo.query.filter_by(
+            party_name=item.party_name).first().person
+        party_dicts.append({
+            'party_name': item.party_name,
+            'member_count': len(party_members)
+        })
+    return render_template('party.html', party_list=party_dicts)
 
 
 @query.route('/party/<partyname>')
 def party_member(partyname):
+    party_members = []
     if partyname == ' mysmwtsngzdgtd':
-        party_members = PersonInfo.query.filter(
-            or_(PersonInfo.party_tag is None,
-                PersonInfo.party_tag == '')).all()
+        party_list = PartyInfo.query.filter(
+            or_(PersonInfo.party_name is None,
+                PersonInfo.party_name == '')).all()
+        for item in party_list:
+            party_members.extend(item.person)
     else:
-        party_members = PersonInfo.query.filter(
-            PersonInfo.party_tag == partyname.lstrip()).all()
+        party_list = PartyInfo.query.filter(
+            PartyInfo.party_name == partyname.lstrip()).all()
+        for item in party_list:
+            party_members.extend(item.person)
     return render_template('list.html', data=party_members)
 
 
@@ -181,18 +195,27 @@ def tags():
                 item['flag'] = "checked"
             else:
                 item['flag'] = ""
-        persons = []
+
         for tag in checked_list:
-            tag = tag
             if tag == '党派未录入':
+                persons = set(
+                    PartyInfo.query.filter(
+                        or_(PartyInfo.party_name == None,
+                            PartyInfo.party_name == '')).first().person)
                 for tag in PartyInfo.query.filter(
                         or_(PartyInfo.party_name == None,
                             PartyInfo.party_name == '')).all():
-                    persons.extend(tag.person)
+                    persons = set(tag.person).intersection(persons)
             else:
-                for tag in PartyInfo.query.filter(PartyInfo.party_name == tag).all():
-                    persons.extend(tag.person)
-        return render_template('tags.html', party_list=p_list, data=persons)
+                persons = set(
+                    PartyInfo.query.filter(
+                        PartyInfo.party_name == tag).first().person)
+                for tag in PartyInfo.query.filter(
+                        PartyInfo.party_name == tag).all():
+                    persons = set(tag.person).intersection(persons)
+        return render_template('tags.html',
+                               party_list=p_list,
+                               data=set(persons))
     else:
         return render_template('tags.html', party_list=p_list)
 

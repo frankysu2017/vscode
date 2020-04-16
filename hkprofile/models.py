@@ -160,4 +160,3 @@ class PartyInfo(db.Model):
 
     def __repr__(self):
         return "{}".format(self.party_name)
-
