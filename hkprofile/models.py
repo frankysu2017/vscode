@@ -149,7 +149,7 @@ class PartyInfo(db.Model):
     __tablename__ = 'party_info'
 
     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    party_name = db.Column(db.String(255))
+    party_name = db.Column(db.String(255), unique=True)
     summary = db.Column(db.Text)
     person = db.relationship('PersonInfo',
                              secondary=persons_tags,

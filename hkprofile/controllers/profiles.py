@@ -2,6 +2,8 @@
 # coding=utf-8
 # hkprofile/controllers/profiles.py
 
+from functools import reduce
+
 import ast
 
 from flask import Blueprint, render_template, request, url_for, redirect
@@ -109,6 +111,8 @@ def insert():
                 else:
                     tag = PartyInfo(item)
                 p.partytag.append(tag)
+        else:
+            p.partytag = [PartyInfo('')]
 
         if request.form['picture']:
             for item in request.form['picture'].split('\n'):
@@ -123,6 +127,9 @@ def insert():
 
 @query.route('/party')
 def party_list():
+    empty_partys = PartyInfo.query.filter_by(person=None).all()
+    for p in empty_partys:
+        db.session.delete(p)
     PartyInfo.query.filter(PartyInfo.party_name == None).update(
         {'party_name': ''})
     db.session.commit()
@@ -143,8 +150,8 @@ def party_member(partyname):
     party_members = []
     if partyname == ' mysmwtsngzdgtd':
         party_list = PartyInfo.query.filter(
-            or_(PersonInfo.party_name is None,
-                PersonInfo.party_name == '')).all()
+            or_(PartyInfo.party_name == None,
+                PartyInfo.party_name == '')).all()
         for item in party_list:
             party_members.extend(item.person)
     else:
@@ -185,8 +192,6 @@ def tags():
     for item in db.session.query(PartyInfo.party_name).distinct().all():
         if item.party_name:
             p_list.append({'party_name': item.party_name})
-        else:
-            p_list.append({'party_name': "党派未录入"})
     if request.method == 'POST':
         checked_list = [x.strip() for x in request.form.getlist('partytags')]
         for item in p_list:
@@ -194,24 +199,28 @@ def tags():
                 item['flag'] = "checked"
             else:
                 item['flag'] = ""
-
-        for tag in checked_list:
-            if tag == '党派未录入':
-                persons = set(
-                    PartyInfo.query.filter(
-                        or_(PartyInfo.party_name == None,
-                            PartyInfo.party_name == '')).first().person)
-                for tag in PartyInfo.query.filter(
-                        or_(PartyInfo.party_name == None,
-                            PartyInfo.party_name == '')).all():
-                    persons = set(tag.person).intersection(persons)
-            else:
-                persons = set(
-                    PartyInfo.query.filter(
-                        PartyInfo.party_name == tag).first().person)
-                for tag in PartyInfo.query.filter(
-                        PartyInfo.party_name == tag).all():
-                    persons = set(tag.person).intersection(persons)
+        persons = []
+        if checked_list:
+            for tag in checked_list:
+                persons.append(
+                    set(
+                        PartyInfo.query.filter_by(
+                            party_name=tag).first().person))
+        else:
+            if PartyInfo.query.filter_by(party_name=None).first():
+                persons.append(
+                    set(
+                        PartyInfo.query.filter_by(
+                            party_name=None).first().person))
+            if PartyInfo.query.filter_by(party_name='').first():
+                persons.append(
+                    set(
+                        PartyInfo.query.filter_by(
+                            party_name='').first().person))
+        if persons:
+            persons = reduce(lambda x, y: x.intersection(y), persons)
+        else:
+            persons = []
         return render_template('tags.html',
                                party_list=p_list,
                                data=set(persons))
@@ -266,12 +275,15 @@ def edit(person_id=0):
                 x.party_name
                 for x in PartyInfo.query.distinct(PartyInfo.party_name).all()
             ]
+            p.partytag = []
             for item in request.form['party'].split('-'):
                 if item in tag_list:
                     tag = PartyInfo.query.filter_by(party_name=item).first()
                 else:
                     tag = PartyInfo(item)
                 p.partytag.append(tag)
+        else:
+            p.partytag = [PartyInfo.query.filter_by(party_name='').first(),]
         db.session.add(p)
         db.session.commit()
         return redirect(url_for('profile.detail', person_id=person_id))
@@ -280,7 +292,9 @@ def edit(person_id=0):
             timestring = datetime.strftime(p.birthdate, '%m/%d/%Y')
         else:
             timestring = ''
-        return render_template('edit.html', t=timestring, p=p)
+        partys = ('-'.join([x.party_name for x in p.partytag]))
+        print(partys)
+        return render_template('edit.html', t=timestring, p=p, party=partys)
 
 
 @profile.route('/avatar/<int:person_id>', methods=['POST', 'GET'])
