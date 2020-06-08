@@ -7,7 +7,7 @@ from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 
 from models import db
-from controllers.profiles import profile, query
+from controllers.profiles import profile, query, activities
 
 bootstrap = Bootstrap()
 
@@ -20,6 +20,7 @@ def create_app(object_name):
     bootstrap.init_app(app)
     app.register_blueprint(profile)
     app.register_blueprint(query)
+    app.register_blueprint(activities)
 
     @app.route('/')
     def index():

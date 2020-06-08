@@ -10,7 +10,7 @@ from flask import Blueprint, render_template, request, url_for, redirect
 from datetime import datetime
 from sqlalchemy import or_
 
-from models import db, PersonInfo, Avatar, PartyInfo
+from models import db, PersonInfo, Avatar, PartyInfo, Activities
 from forms import QueryForm
 
 profile = Blueprint('profile',
@@ -24,6 +24,12 @@ query = Blueprint('query',
                   template_folder='templates',
                   static_folder='static',
                   url_prefix='/')
+
+activities = Blueprint('activities',
+                       __name__,
+                       template_folder='templates',
+                       static_folder='static',
+                       url_prefix='/activities')
 
 
 @query.route('/', methods=['GET', 'POST'])
@@ -283,7 +289,9 @@ def edit(person_id=0):
                     tag = PartyInfo(item)
                 p.partytag.append(tag)
         else:
-            p.partytag = [PartyInfo.query.filter_by(party_name='').first(),]
+            p.partytag = [
+                PartyInfo.query.filter_by(party_name='').first(),
+            ]
         db.session.add(p)
         db.session.commit()
         return redirect(url_for('profile.detail', person_id=person_id))
@@ -307,3 +315,34 @@ def avatar_edit(person_id):
         return render_template('gallery.html', p=p)
     else:
         return render_template('gallery.html', p=p)
+
+
+@profile.route('/activities/<int:person_id>', methods=['POST', 'GET'])
+def person_activities(person_id):
+    p = PersonInfo.query.get(person_id)
+    return render_template('activities.html', p=p)
+
+
+@profile.route('/activities/add/<int:person_id>', methods=['POST', 'GET'])
+def new_activities(person_id):
+    p = PersonInfo.query.get(person_id)
+    if request.method == 'POST':
+        if request.form['date']:
+            ac_date = datetime.strptime(request.form['date'], '%m/%d/%Y')
+        else:
+            ac_date = None
+        ac_content = request.form['activity'].replace('\r\n', '<br/>')
+        actv = Activities(ac_date, ac_content)
+        print('----------------------------------')
+        print(ac_date, request.form['activity'])
+        p.activities.append(actv)
+        db.session.add(actv)
+        db.session.commit()
+        return render_template('activities.html', p=p)
+    else:
+        return render_template('new_activities.html', p=p)
+
+
+@activities.route('/<int:activites_id>', methods=['POST', 'GET'])
+def edit_activities(activites_id):
+    return render_template('edit_activities.html')

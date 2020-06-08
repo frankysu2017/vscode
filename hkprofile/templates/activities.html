@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+<title>XXXX个人档案 - 主页</title>
+{% endblock %}
+
+
+{% block content %}
+<div class="content">
+	{% for actv in p.activities %}
+	<ul class="notice-list">
+		<li class="divider">
+			<a>
+				<span class="avatar bg-violet"><i class="fa fa-flag"></i></span>
+				<span class="name">{{ actv.date }}</span>
+				<div>{{ actv.activity }}</div>
+			</a>
+		</li>
+	</ul>
+	{% endfor %}
+</div>
+<td><a class="btn btn-sm btn-warning" href="/profile/activities/add/{{ p.id }}" role="button">添加活动</a></td>
+
+{% endblock %}

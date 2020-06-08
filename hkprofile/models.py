@@ -51,6 +51,7 @@ class PersonInfo(db.Model):
     for key in list(columns.keys())[22:]:
         exec("%s = db.Column(db.Text)" % key)
     avatar = db.relationship('Avatar')
+    activities = db.relationship('Activities')
     partytag = db.relationship('PartyInfo',
                                secondary=persons_tags,
                                back_populates='person')
@@ -160,3 +161,19 @@ class PartyInfo(db.Model):
 
     def __repr__(self):
         return "{}".format(self.party_name)
+
+
+class Activities(db.Model):
+    __tablename__ = 'activities'
+
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    activity = db.Column(db.Text)
+    date = db.Column(db.Date)
+    person_id = db.Column(db.Integer, db.ForeignKey('person_info.id'))
+
+    def __init__(self, date, activity):
+        self.date = date
+        self.activity = activity
+
+    def __repr__(self):
+        return '<Activity_id: {}>'.format(self.id)

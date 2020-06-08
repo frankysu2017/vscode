@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+<title>香港个人档案 - 修改活动</title>
+{% endblock %}
+
+
+{% block content %}
+<form class="form-horizontal" action="/activities/1" method="POST">
+	<div class="form-group">
+		<h4>&emsp;活动时间&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;添加活动 </h4>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-3">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="mm/dd/yyyy" id="datepicker-autoclose">
+				<span class="input-group-addon bg-primary text-white"><i class="fa fa-calendar"></i></span>
+			</div>
+		</div>
+		<div class="col-sm-9">
+			<textarea id="textarea" cols="115" rows="20" maxlength="65535" placeholder="Add the activities here"></textarea>
+		</div>
+	</div>
+	<br><br><br>
+	<button type="submit" class="btn btn-primary btn-sm waves-effect waves-light">提交</button>
+</form>
+
+{% endblock %}
